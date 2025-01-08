@@ -1,5 +1,6 @@
 package test.functional;
 
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -7,18 +8,25 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class AppTest {
 
-    public WebDriver retornarBrowser() {
-        WebDriver driver = new ChromeDriver();
-        driver.get("http://localhost:8001/tasks/");
+    public WebDriver retornarBrowser() throws Exception {
+        // WebDriver driver = new ChromeDriver();
+
+        DesiredCapabilities cap = DesiredCapabilities.chrome();
+
+        WebDriver driver = new RemoteWebDriver(new URL("http://192.168.1.15:4444/wd/hub"), cap);
+
+        driver.navigate().to("http://192.168.1.15:8001/tasks/");
+
         return driver;
     }
 
     @Test
-    public void adiconarTarefaComSucesso() {
+    public void adiconarTarefaComSucesso() throws Exception {
         LocalDate data = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String dataFormatada = data.format(formatter);
@@ -45,7 +53,7 @@ public class AppTest {
     }
 
     @Test
-    public void adiconarTarefaSemDescricao() {
+    public void adiconarTarefaSemDescricao() throws Exception {
         LocalDate data = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String dataFormatada = data.format(formatter);
@@ -70,7 +78,7 @@ public class AppTest {
     }
 
     @Test
-    public void adiconarTarefaComDataPassada() {
+    public void adiconarTarefaComDataPassada() throws Exception {
         LocalDate data = LocalDate.now();
         data = data.minusDays(5);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -98,7 +106,7 @@ public class AppTest {
     }
 
     @Test
-    public void adiconarTarefaSemData() {
+    public void adiconarTarefaSemData() throws Exception {
 
         WebDriver driver = retornarBrowser();
 
