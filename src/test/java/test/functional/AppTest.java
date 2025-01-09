@@ -18,7 +18,8 @@ public class AppTest {
 
         DesiredCapabilities cap = DesiredCapabilities.chrome();
 
-        WebDriver driver = new RemoteWebDriver(new URL("http://192.168.1.15:4444/wd/hub"), cap);
+        WebDriver driver = new RemoteWebDriver(new
+        URL("http://192.168.1.15:4444/wd/hub"), cap);
 
         driver.navigate().to("http://192.168.1.15:8001/tasks/");
 
@@ -127,4 +128,29 @@ public class AppTest {
         }
     }
 
+    @Test
+    public void removerTarefaComSucesso() throws Exception {
+
+        LocalDate data = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String dataFormatada = data.format(formatter);
+
+        WebDriver driver = retornarBrowser();
+
+        try {
+            driver.findElement(By.id("addTodo")).click();
+            driver.findElement(By.id("task")).sendKeys("Tarefa de teste(Funcional)");
+            driver.findElement(By.id("dueDate")).sendKeys(dataFormatada);
+            driver.findElement(By.id("saveButton")).click();
+            String mensagem = driver.findElement(By.id("message")).getText();
+            Assert.assertEquals("Success!", mensagem);
+            
+            driver.findElement(By.linkText("Remove")).click();
+            String mensagemRemocao = driver.findElement(By.id("message")).getText();
+            Assert.assertEquals("Success!", mensagemRemocao);
+
+        } catch (Exception e) {
+            Assert.fail();
+        }
+    }
 }
